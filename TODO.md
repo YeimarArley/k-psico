@@ -1,7 +1,7 @@
 - [x] Append "# k-psico" to README.md
-- [ ] Run git init
-- [ ] Run git add .
-- [ ] Run git commit -m "primer commit"
-- [ ] Run git branch -M main
-- [ ] Run git remote add origin https://github.com/YeimarArley/k-psico.git
-- [ ] Run git push -u origin main
+- [x] Run git init
+- [x] Run git add .
+- [x] Run git commit -m "primer commit"
+- [x] Run git branch -M main
+- [x] Run git remote add origin https://github.com/YeimarArley/k-psico.git
+- [x] Run git push -u origin main

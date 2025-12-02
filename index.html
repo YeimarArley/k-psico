@@ -910,7 +910,7 @@ select#servicio:focus, select#servicio_inline:focus {
             </div>
             <span class="aniversario-badge" id="aniversarioBadge" role="button" tabindex="0" aria-pressed="false"><i class="fas fa-gift"></i> Mes de Aniversario</span>
             <button class="aniversario-icono-movil" aria-label="Mes de Aniversario" title="Mes de Aniversario" style="display:none"><i class="fas fa-gift"></i></button>
-            <button id="btnCelebrar" class="btn-servicios-barra" title="Celebrar"><i class="fas fa-confetti"></i> servicios</button>
+            <button id="btnCelebrar" class="btn-servicios-barra" title="Servicios"><i class="fas fa-user-md"></i> servicios</button>
 
 
         </div>
@@ -1148,88 +1148,19 @@ select#servicio:focus, select#servicio_inline:focus {
     <a href="https://www.facebook.com/share/19q25QgRkG/?mibextid=wwXIfr" target="_blank" title="Facebook" style="background:#1976d2; color:#fff; width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.10); font-size:1.5em;"><i class="fab fa-facebook-f"></i></a>
     <a href="https://www.instagram.com/kpsicopsicologia?igsh=ejUwbHRueDA4ZWlw" target="_blank" title="Instagram" style="background:#e1306c; color:#fff; width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.10); font-size:1.5em;"><i class="fab fa-instagram"></i></a>
     </div>
-    <!-- Canvas para confeti -->
-    <canvas id="confettiCanvas" style="position:fixed; left:0; top:0; width:100%; height:100%; pointer-events:none; z-index:15000;"></canvas>
+
     
+
     <script>
-        // Confeti mejorado: lluvia, rotación y formas variadas
-        (function(){
-            const canvas = document.getElementById('confettiCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            let W = canvas.width = window.innerWidth;
-            let H = canvas.height = window.innerHeight;
-            let particles = [];
-            let animId = null;
-            function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-            window.addEventListener('resize', resize);
-            function rand(min,max){ return Math.random()*(max-min)+min; }
-
-            function createParticles(count){
-                particles = [];
-                for(let i=0;i<count;i++){
-                    const size = rand(6,14);
-                    const type = Math.random() < 0.5 ? 'rect' : (Math.random() < 0.5 ? 'circle' : 'tri');
-                    particles.push({
-                        x: rand(0,W),
-                        y: rand(-H, -10) , // iniciar por encima para 'lluvia'
-                        size,
-                        wobble: rand(0,Math.PI*2),
-                        wobbleSpeed: rand(0.02,0.08),
-                        vx: rand(-0.6,0.6),
-                        vy: rand(1.5,4.5),
-                        angle: rand(0,Math.PI*2),
-                        angularVel: rand(-0.08,0.08),
-                        color: `hsl(${Math.floor(rand(0,360))},80%,55%)`,
-                        opacity: rand(0.85,1),
-                        type
-                    });
-                }
-            }
-
-            function drawParticle(p){ ctx.save(); ctx.globalAlpha = p.opacity; ctx.translate(p.x, p.y); ctx.rotate(p.angle + Math.sin(p.wobble)*0.2);
-                ctx.fillStyle = p.color;
-                if(p.type === 'rect') ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
-                else if(p.type === 'circle'){ ctx.beginPath(); ctx.arc(0,0,p.size/2,0,Math.PI*2); ctx.fill(); }
-                else { ctx.beginPath(); ctx.moveTo(0,-p.size/2); ctx.lineTo(p.size/2,p.size/2); ctx.lineTo(-p.size/2,p.size/2); ctx.closePath(); ctx.fill(); }
-                ctx.restore(); }
-
-            function render(){ ctx.clearRect(0,0,W,H); for(let i=0;i<particles.length;i++){ const p = particles[i]; p.wobble += p.wobbleSpeed; p.x += p.vx + Math.sin(p.wobble)*0.6; p.y += p.vy; p.angle += p.angularVel; drawParticle(p); if(p.y > H + 30){ // reiniciar arriba con variación
-                        p.x = rand(0,W); p.y = rand(-120,-10); p.vy = rand(1.5,4.5); p.vx = rand(-0.6,0.6); p.size = rand(6,14);
-                    }
-                }
-            }
-
-            function startConfetti(duration=6000, amount=200){
-                createParticles(amount);
-                let start = Date.now();
-                function frame(){
-                    render();
-                    animId = requestAnimationFrame(frame);
-                    // si duration es 0 o negativo -> indefinido
-                    if(duration > 0 && (Date.now() - start > duration)){
-                        // dejar que las piezas terminen de caer lentamente
-                        setTimeout(stopConfetti, 300);
-                    }
-                }
-                if(animId) cancelAnimationFrame(animId);
-                frame();
-            }
-
-            function stopConfetti(){ if(animId) cancelAnimationFrame(animId); animId = null; ctx.clearRect(0,0,W,H); particles = []; }
-
-            window.startConfetti = startConfetti; window.stopConfetti = stopConfetti;
-            // start breve al cargar
-            window.addEventListener('load', function(){ setTimeout(()=>startConfetti(4500,140),300); });
-        })();
-
-        // Botón Celebrar
+        // Botón Servicios - abre el modal de formulario
         const btnCelebrar = document.getElementById('btnCelebrar');
-        // Toggle: si ya está corriendo, lo detiene; sino, inicia lluvia indefinida
         if (btnCelebrar) btnCelebrar.addEventListener('click', function(){
-            if(typeof window.isConfettiRunning === 'undefined') window.isConfettiRunning = false;
-            if(window.isConfettiRunning){ if(window.stopConfetti) stopConfetti(); window.isConfettiRunning = false; btnCelebrar.classList.remove('active'); }
-            else { if(window.startConfetti) startConfetti(0,260); window.isConfettiRunning = true; btnCelebrar.classList.add('active'); }
+            const modal = document.getElementById('modal-form');
+            if (modal) {
+                modal.classList.add('open');
+                const nombre = document.getElementById('nombre');
+                if (nombre) nombre.focus();
+            }
         });
         // Badge aniversario abre modal de agradecimiento
         const badgeAniv = document.getElementById('aniversarioBadge');
@@ -1255,8 +1186,7 @@ select#servicio:focus, select#servicio_inline:focus {
             if (badgeAniv) badgeAniv.setAttribute('aria-pressed','true');
             // mostrar tooltip breve en móviles
             if(window.innerWidth < 900) showBadgeTooltip('Toca para celebrar 🎉');
-            // pequeño delay para sincronizar con entrada del modal antes de la explosión
-            if (window.innerWidth >= 900 && window.startConfetti) setTimeout(()=>startConfetti(2200,420), 260);
+            // Modal abierto
         }
         // Exponer función global como fallback para pruebas desde consola o cuando el binding falle
         window.openAniversarioModal = openAniv;
@@ -1323,8 +1253,6 @@ select#servicio:focus, select#servicio_inline:focus {
                     const ta = document.createElement('textarea'); ta.value = code; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(e){} document.body.removeChild(ta);
                 })();
                 if (feedback) { feedback.textContent = 'Código copiado: ' + code; }
-                // Explosión de confeti breve al copiar (solo en pantallas grandes)
-                if (window.innerWidth >= 900 && window.startConfetti) startConfetti(2000, 320);
                 setTimeout(()=>{ if (feedback) feedback.textContent = '\u00A0'; }, 3500);
             });
         }
@@ -1604,7 +1532,6 @@ select#servicio:focus, select#servicio_inline:focus {
                     animation: bounceServicios 1.2s infinite, shineServicios 2.5s infinite;
                 }
                 .aniversario-badge,
-                .aniversario-badge,
                 .btn-close-ann {
                     color: #212121;
                     background: linear-gradient(90deg,#ff8800 0%, #ffe066 100%);
@@ -1622,7 +1549,6 @@ select#servicio:focus, select#servicio_inline:focus {
                     align-items: center;
                     gap: 8px;
                 }
-                }
                 .empresa {
                     font-size: 0.9em;
                     font-weight: 600;
@@ -1633,7 +1559,6 @@ select#servicio:focus, select#servicio_inline:focus {
                     padding: 3px 8px;
                     border-radius: 10px;
                     margin-left: 4px;
-                }
                 }
                 @keyframes bounceServicios {
                     0%   { transform: scale(1) translateY(0); }
